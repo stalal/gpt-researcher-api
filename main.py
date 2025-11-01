@@ -10,19 +10,13 @@ async def root():
 
 @app.post("/research")
 async def research(query: str):
-    # This uses the gpt-researcher package from PyPI
     researcher = GPTResearcher(query=query)
     await researcher.conduct_research()
     report = await researcher.write_report()
     return {"report": report, "query": query}
 
+# This is important for Railway
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
-```
-
-**`requirements.txt`:**
-```
-fastapi
-uvicorn
-gpt-researcher
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
